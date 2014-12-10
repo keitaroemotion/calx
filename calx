@@ -16,7 +16,7 @@ haec_uno_dies = DateTime.new(haec_annus,haec_mensis,1).wday
 puts
 
 (1.. haec_uno_dies).each {
-  printf "  "
+  printf "   "
 }
 
 (1..31).each { |dies|
