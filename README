@@ -1,8 +1,8 @@
 
 1. install colorize library
-$ gem install colorize
+  $ gem install colorize
 2. locate this calx directory somewhere
- /your/directory/calx
+  example:  /your/directory/calx
 3. make alias at ~/.bash_profile
  alias calx=/your/directory/calx/calx
 4. reflect your .bash_profile
