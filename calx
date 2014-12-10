@@ -34,8 +34,13 @@ def showTempus(d)
   printf time.green
   printf "---|"
   percentage =  "%i" % [nanciscorRatio(d.hour, d.minute)]
+  if percentage == "100"
+    percentage = "FIN"
+  end
   printf percentage.green
-  printf "%"
+  if percentage != "FIN"
+    printf "%"
+  end
   puts
 end
 
