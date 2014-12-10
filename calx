@@ -10,8 +10,6 @@ def days_in_month(month, year = Time.now.year)
    COMMON_YEAR_DAYS_IN_MONTH[month]
 end
 
-
-
 d = DateTime.now
 
 haec_annus = d.year
@@ -19,12 +17,25 @@ haec_mensis = d.month
 
 haec_uno_dies = DateTime.new(haec_annus,haec_mensis,1).wday
 
+def nanciscorRatio(hour, minute)
+  haec_consummatio = (hour*60.0)+minute.to_f
+  maximus_consummatio = 18.0*60.0
+  (haec_consummatio/maximus_consummatio*100.0).to_i
+end
+
 def showTempus(d)
   line = "------"
   printf line
-  time = " %s:%s " % [d.hour, d.minute]
+  minute = d.minute.to_s
+  if minute.size == 1
+   minute = "0"+minute
+  end
+  time = " %s:%s " % [d.hour, minute]
   printf time.green
-  printf line
+  printf "---|"
+  percentage =  "%i" % [nanciscorRatio(d.hour, d.minute)]
+  printf percentage.green
+  printf "%"
   puts
 end
 
@@ -56,7 +67,6 @@ puts
 }
 
 puts
-
 
 
 
