@@ -11,12 +11,24 @@ def days_in_month(month, year = Time.now.year)
 end
 
 
+
 d = DateTime.now
 
 haec_annus = d.year
 haec_mensis = d.month
 
 haec_uno_dies = DateTime.new(haec_annus,haec_mensis,1).wday
+
+def showTempus(d)
+  line = "------"
+  printf line
+  time = " %s:%s " % [d.hour, d.minute]
+  printf time.green
+  printf line
+  puts
+end
+
+showTempus d
 
 ["Su","Mo","Tu","We","Th","Fr","Sa"].each { |dow|
   printf dow+" "
@@ -44,4 +56,11 @@ puts
 }
 
 puts
+
+
+
+
+
+
+
 
