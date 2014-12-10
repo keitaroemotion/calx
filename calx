@@ -3,6 +3,14 @@
 require 'colorize'
 require 'date'
 
+COMMON_YEAR_DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+def days_in_month(month, year = Time.now.year)
+   return 29 if month == 2 && Date.gregorian_leap?(year)
+   COMMON_YEAR_DAYS_IN_MONTH[month]
+end
+
+
 d = DateTime.now
 
 haec_annus = d.year
@@ -19,7 +27,7 @@ puts
   printf "   "
 }
 
-(1..31).each { |dies|
+(1..days_in_month(haec_mensis, haec_annus)).each { |dies|
   diesprop = DateTime.new(haec_annus,haec_mensis,dies)
   if diesprop.wday == 0
     puts
