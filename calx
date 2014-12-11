@@ -7,6 +7,9 @@ require '/usr/local/lib/calx/controller.rb'
 option = ARGV[0]
 
 $d = DateTime.now
+$haec_annus = $d.year
+$haec_mensis = $d.month
+#haec_uno_dies = DateTime.new($haec_annus,$haec_mensis,1).wday
 
 def complement_year(year)
   if year.to_s == 2
@@ -15,13 +18,18 @@ def complement_year(year)
 end
 
 def insert(isholiday=false)
-  if ARGV.size < 4
+  if !isholiday && ARGV.size < 4
     abort "Error : [month] [day] [comment] [year]".red
+  end
+
+  if isholiday && ARGV.size < 3
+    abort "Error : [month] [day] [year]".red
   end
 
   # month day {comment} year
   month = ARGV[1]
   day = ARGV[2]
+
   comment = ARGV[3]
   year = $d.year.to_s
   if ARGV.size == 5
@@ -33,7 +41,7 @@ end
 
 def delete()
   if ARGV.size < 3
-    abort "Error : [month] [day] [year]".red
+    abort "Error : calx rm [month] [day] [year]".red
   end
   # month day year
   month = ARGV[1]
@@ -49,13 +57,28 @@ end
 
 case option
 
-when "insert"
+when "add"
   insert
-when "holiday"
+when "hol"
   insert true
-when "delete"
+when "rm"
   delete
+when "-h"
+  puts
+  puts "calx ... show calendar "
+  puts "calx add [month] [day] [comment] [optional:year] ... add todo "
+  puts "calx hol [month] [day] [comment] [optional:year] ... add holiday"
+  puts "calx rm [month] [day] [optional:year] ... rm todo|holiday"
+  puts
+  abort
+when "cert"
+  if ARGV.size < 3
+    abort "argument is too short"
+  end
+  $haec_annus = ARGV[1]
+  $haec_mensis = ARGV[2]
 else
+
 end
 
 COMMON_YEAR_DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -65,17 +88,13 @@ def days_in_month(month, year = Time.now.year)
    COMMON_YEAR_DAYS_IN_MONTH[month]
 end
 
-
-haec_annus = $d.year
-haec_mensis = $d.month
-
-haec_uno_dies = DateTime.new(haec_annus,haec_mensis,1).wday
-
 def nanciscorRatio(hour, minute)
   maximus_consummatio = 9.0*60.0
   haec_consummatio =  ((hour-9.0)*60.0)+minute.to_f
   (haec_consummatio/maximus_consummatio*100.0).to_i
 end
+
+haec_uno_dies = DateTime.new($haec_annus.to_i,$haec_mensis.to_i,1).wday
 
 def showTempus(d)
   line = "------"
@@ -109,8 +128,8 @@ puts
   printf "   "
 }
 
-(1..days_in_month(haec_mensis, haec_annus)).each { |dies|
-  diesprop = DateTime.new(haec_annus,haec_mensis,dies)
+(1..days_in_month($haec_mensis.to_i, $haec_annus.to_i)).each { |dies|
+  diesprop = DateTime.new($haec_annus.to_i,$haec_mensis.to_i,dies)
   if diesprop.wday == 0
     puts
   end
@@ -120,9 +139,9 @@ puts
   end
   if diesprop.day == $d.day
     printf (vdies+" ").red
-  elsif Controller.hasSchedule haec_annus, haec_mensis, dies
+  elsif Controller.hasSchedule $haec_annus, $haec_mensis, dies
     printf (vdies+" ").blue
-  elsif Controller.hasSchedule haec_annus, haec_mensis, dies, true
+  elsif Controller.hasSchedule $haec_annus, $haec_mensis, dies, true
     printf (vdies+" ").red
   else
     printf vdies+" "
@@ -130,8 +149,4 @@ puts
 }
 
 puts
-
-
-
-
 
