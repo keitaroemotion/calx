@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+system ("sudo gem install colorize")
+
+
 # resoucre copy dist
 
 where_program_is = Dir.pwd
