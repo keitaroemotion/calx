@@ -6,16 +6,56 @@ require '/usr/local/lib/calx/controller.rb'
 
 option = ARGV[0]
 
-if option == "insert"
-  if ARGV.size < 5
-    abort "Error : Arguments provided is not sufficient.".red
+$d = DateTime.now
+
+def complement_year(year)
+  if year.to_s == 2
+    return "20#{year}"
   end
-  year = ARGV[1]
-  month = ARGV[2]
-  day = ARGV[3]
-  comment = ARGV[4]
-  Controller.insert(year,month,day,comment)
+end
+
+def insert(isholiday=false)
+  if ARGV.size < 4
+    abort "Error : [month] [day] [comment] [year]".red
+  end
+
+  # month day {comment} year
+  month = ARGV[1]
+  day = ARGV[2]
+  comment = ARGV[3]
+  year = $d.year.to_s
+  if ARGV.size == 5
+    year = complement_year ARGV[4]
+  end
+  Controller.insert(year, month, day, comment, isholiday)
   abort "registration completed : #{year}/#{month}/#{day} #{comment}"
+end
+
+def delete()
+  if ARGV.size < 3
+    abort "Error : [month] [day] [year]".red
+  end
+  # month day year
+  month = ARGV[1]
+  day = ARGV[2]
+
+  year = $d.year.to_s
+  if ARGV.size == 4
+    year = complement_year ARGV[3]
+  end
+  Controller.delete year, month, day
+  abort "deletion completed : #{year}/#{month}/#{day}"
+end
+
+case option
+
+when "insert"
+  insert
+when "holiday"
+  insert true
+when "delete"
+  delete
+else
 end
 
 COMMON_YEAR_DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -25,10 +65,9 @@ def days_in_month(month, year = Time.now.year)
    COMMON_YEAR_DAYS_IN_MONTH[month]
 end
 
-d = DateTime.now
 
-haec_annus = d.year
-haec_mensis = d.month
+haec_annus = $d.year
+haec_mensis = $d.month
 
 haec_uno_dies = DateTime.new(haec_annus,haec_mensis,1).wday
 
@@ -59,7 +98,7 @@ def showTempus(d)
   puts
 end
 
-showTempus d
+showTempus $d
 
 ["Su","Mo","Tu","We","Th","Fr","Sa"].each { |dow|
   printf dow+" "
@@ -79,10 +118,12 @@ puts
   if (dies < 10)
     vdies = " "+vdies
   end
-  if diesprop.day == d.day
+  if diesprop.day == $d.day
     printf (vdies+" ").red
   elsif Controller.hasSchedule haec_annus, haec_mensis, dies
     printf (vdies+" ").blue
+  elsif Controller.hasSchedule haec_annus, haec_mensis, dies, true
+    printf (vdies+" ").red
   else
     printf vdies+" "
   end
