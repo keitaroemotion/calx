@@ -2,6 +2,21 @@
 
 require 'colorize'
 require 'date'
+require '/usr/local/lib/calx/controller.rb'
+
+option = ARGV[0]
+
+if option == "insert"
+  if ARGV.size < 5
+    abort "Error : Arguments provided is not sufficient.".red
+  end
+  year = ARGV[1]
+  month = ARGV[2]
+  day = ARGV[3]
+  comment = ARGV[4]
+  Controller.insert(year,month,day,comment)
+  abort "registration completed : #{year}/#{month}/#{day} #{comment}"
+end
 
 COMMON_YEAR_DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -18,8 +33,8 @@ haec_mensis = d.month
 haec_uno_dies = DateTime.new(haec_annus,haec_mensis,1).wday
 
 def nanciscorRatio(hour, minute)
-  haec_consummatio = (hour*60.0)+minute.to_f
-  maximus_consummatio = 18.0*60.0
+  maximus_consummatio = 9.0*60.0
+  haec_consummatio =  ((hour-9.0)*60.0)+minute.to_f
   (haec_consummatio/maximus_consummatio*100.0).to_i
 end
 
@@ -66,14 +81,14 @@ puts
   end
   if diesprop.day == d.day
     printf (vdies+" ").red
+  elsif Controller.hasSchedule haec_annus, haec_mensis, dies
+    printf (vdies+" ").blue
   else
     printf vdies+" "
   end
 }
 
 puts
-
-
 
 
 

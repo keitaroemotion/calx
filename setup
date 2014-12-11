@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+# resoucre copy dist
+
+where_program_is = Dir.pwd
+dest_bin = "/usr/local/lib/calx"
+
+from_file = "#{where_program_is}/lib/controller.rb"
+dest_file = "#{dest_bin}/controller.rb"
+
+mkdir = "mkdir -p #{dest_bin}"
+cpfile = "cp #{from_file} #{dest_file}"
+
+system(mkdir)
+system(cpfile)
+
+from_file = "#{where_program_is}/calx"
+to_file = "/usr/local/bin/calx"
+
+cpfile = "cp #{from_file} #{to_file}"
+
+system(cpfile)
+
+from_dir = "#{where_program_is}/lib/db/*"
+dest_dir = "/usr/local/etc/calx/"
+
+mdir = "mkdir -p #{dest_dir}"
+cpdir = "cp -r #{from_dir} #{dest_dir}"
+
+system(mdir)
+system(cpdir)
