@@ -124,7 +124,7 @@ def add_right_pane(arr, int)
   if arr.size > int
     extra = "- "+arr[int].chomp
   end
-  remnant = ""
+  remnant = -1
   if extra.include? "t:"
     time = extra.strip.split("t:")[1].split(':')
     hour = time[0].to_i
@@ -132,7 +132,7 @@ def add_right_pane(arr, int)
     remnant =  (hour*60+min) - ($d.hour*60+$d.minute)
   end
   printf "| #{extra} ".white
-  if remnant != ""
+  if remnant > 0
     printf "#{remnant} minutes left ".green
   end
   puts
@@ -153,12 +153,23 @@ puts "| todos today"
 }
 
 count = 0
+striplen = 0
+maxlen = 21
+
+def entail(striplen, maxlen)
+  if (striplen < maxlen)
+    (1..maxlen-striplen).each { |s|
+      printf " "
+    }
+  end
+end
 
 (1..days_in_month($haec_mensis.to_i, $haec_annus.to_i)).each { |dies|
   diesprop = DateTime.new($haec_annus.to_i,$haec_mensis.to_i,dies)
   if diesprop.wday == 0
     add_right_pane todos, count
     count += 1
+    striplen = 0
   end
   vdies = dies.to_s
   if (dies < 10)
@@ -166,15 +177,20 @@ count = 0
   end
   if diesprop.day == $d.day
     printf (vdies+" ").yellow
+    striplen += 3
   elsif Controller.hasSchedule $haec_annus, $haec_mensis, dies
     printf (vdies+" ").blue
+    striplen += 3
   elsif Controller.hasSchedule $haec_annus, $haec_mensis, dies, true
     printf (vdies+" ").red
+    striplen += 3
   else
     printf vdies+" "
+    striplen += 3
   end
 }
 
-#add_right_pane
-puts
+entail striplen, maxlen
+add_right_pane todos, count
+
 
