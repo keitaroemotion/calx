@@ -1,15 +1,14 @@
+This Program "calx" is an extension of Unix "cal" application.
 
-1. install colorize library
-.. $ gem install colorize
-2. locate this calx directory somewhere
-.. example:  /your/directory/calx
-3. make alias at ~/.bash\_profile
-.. alias calx=/your/directory/calx/calx
-4. reflect your .bash\_profile
-.. $ source ~/.bash\_profile
-5. type the following command
-.. calx
+For installation, all you need to do is:
 
-sorry for the lack of installer.
+$ ./setup
 
-thats it! enjoy!
+Next, run calx command!
+
+$ calx -h   (show help)
+
+$ calx   (simply show calendar)
+
+$ calx add [month] [day]   ... add schedule to specific date of current year
+
