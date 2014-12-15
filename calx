@@ -119,8 +119,12 @@ end
 
 showTempus $d
 
-def add_right_pane()
-  puts "|        "
+def add_right_pane(arr, int)
+  extra = ""
+  if arr.size > int
+    extra = "- "+arr[int].chomp
+  end
+  puts "| #{extra}       "
 end
 
 
@@ -128,18 +132,22 @@ end
   printf dow+" "
 }
 
-add_right_pane
-#puts
+todos =  Controller.get_text($haec_annus.to_i, $haec_mensis.to_i, $d.day)
+
+
+puts "| todos today"
 
 (1.. haec_uno_dies).each {
   printf "   "
 }
 
+count = 0
+
 (1..days_in_month($haec_mensis.to_i, $haec_annus.to_i)).each { |dies|
   diesprop = DateTime.new($haec_annus.to_i,$haec_mensis.to_i,dies)
   if diesprop.wday == 0
-    add_right_pane
-    #puts
+    add_right_pane todos, count
+    count += 1
   end
   vdies = dies.to_s
   if (dies < 10)

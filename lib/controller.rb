@@ -27,6 +27,21 @@ class Controller
     f.close
   end
 
+  def self.get_text(year, month, day, isholiday=false)
+    mdir = getMonthDir year, month
+    makeDir mdir
+    targetfile = "#{mdir}/#{day}.#{getext(isholiday)}"
+    if !File.exist? targetfile
+      return Array.new
+    end
+
+    f = File.open(targetfile, "r")
+    contents = f.to_a
+    f.close
+    contents
+  end
+
+
   def self.hasSchedule(year, month, day, isholiday=false)
     has = true
     file = "%s/%s.%s" % [getMonthDir(year, month), day, getext(isholiday)]
