@@ -124,7 +124,18 @@ def add_right_pane(arr, int)
   if arr.size > int
     extra = "- "+arr[int].chomp
   end
-  puts "| #{extra}       "
+  remnant = ""
+  if extra.include? "t:"
+    time = extra.strip.split("t:")[1].split(':')
+    hour = time[0].to_i
+    min = time[1].to_i
+    remnant =  (hour*60+min) - ($d.hour*60+$d.minute)
+  end
+  printf "| #{extra} ".white
+  if remnant != ""
+    printf "#{remnant} minutes left ".green
+  end
+  puts
 end
 
 
