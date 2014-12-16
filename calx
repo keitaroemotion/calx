@@ -133,7 +133,14 @@ def add_right_pane(arr, int)
   end
   printf "| #{extra} ".white
   if remnant > 0
-    printf "#{remnant} minutes left ".green
+    hour = ""
+    remnant_devided = remnant/60
+    if remnant_devided > 0
+      hour = "%s hrs " % [remnant_devided]
+    end
+    minutes = "%s minutes" % [remnant%60]
+
+    printf "#{hour}#{minutes} left ".green
   end
   puts
 end
@@ -176,12 +183,15 @@ end
     vdies = " "+vdies
   end
   if diesprop.day == $d.day
-    printf (vdies+" ").yellow
+    printf (vdies+" ").green
     striplen += 3
   elsif Controller.hasSchedule $haec_annus, $haec_mensis, dies
     printf (vdies+" ").blue
     striplen += 3
   elsif Controller.hasSchedule $haec_annus, $haec_mensis, dies, true
+    printf (vdies+" ").red
+    striplen += 3
+  elsif (diesprop.wday == 0) || (diesprop.wday == 6)
     printf (vdies+" ").red
     striplen += 3
   else

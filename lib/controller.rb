@@ -19,6 +19,14 @@ class Controller
     end
   end
 
+
+  def self.edit(year, month, day, comment, isholiday=false)
+    mdir = getMonthDir year, month
+    makeDir mdir
+    targetfile = "#{mdir}/#{day}.#{getext(isholiday)}"
+    #command
+  end
+
   def self.insert(year, month, day, comment, isholiday=false)
     mdir = getMonthDir year, month
     makeDir mdir
