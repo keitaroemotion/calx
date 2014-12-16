@@ -19,6 +19,33 @@ class Controller
     end
   end
 
+  def self.delete_todo(year, month, day, index)
+    mdir = getMonthDir year, month
+    dataf = "#{mdir}/#{day}.data"
+    holif = "#{mdir}/#{day}.holiday"
+    file = ""
+    require 'FileUtils'
+    if File.exist? dataf
+      file = dataf
+    elsif File.exist? holif
+      file = holif
+    end
+    f = File.open(file, "r")
+    datacopied = f.each.to_a
+    f.close
+
+    f = File.open(file, "w")
+    i = 0
+    datacopied.each{ |line|
+      if (i == index-1)
+      else
+        f.puts line
+      end
+      i += 1
+    }
+    f.close
+  end
+
 
   def self.edit(year, month, day, comment, isholiday=false)
     mdir = getMonthDir year, month

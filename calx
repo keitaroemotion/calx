@@ -57,6 +57,18 @@ end
 
 case option
 
+when "rmtask"
+  month = ARGV[1]
+  day = ARGV[2]
+  year = $d.year.to_s
+  index = ARGV[3]
+
+  if ARGV.size == 5
+    year = complement_year ARGV[4]
+  end
+
+  Controller.delete_todo year, month, day, index.to_i
+  abort
 when "add"
   insert
 when "hol"
