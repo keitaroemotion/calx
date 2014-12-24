@@ -88,7 +88,7 @@ when "hol"
   insert true
 when "rm"
   delete
-when "-h"
+when "-h", "help"
   puts
   puts "calx ... show calendar "
   puts "calx add [month] [day] [comment] [optional:year] ... add todo "
