@@ -7,6 +7,10 @@ class Controller
     return "data"
   end
 
+  $resource_dir_root = "/usr/local/etc/calx"
+  $resource_dir_target = "#{$resource_dir_root}/caldata"
+
+
   def self.delete(year, month, day)
     mdir = getMonthDir year, month
     dataf = "#{mdir}/#{day}.data"
@@ -62,6 +66,37 @@ class Controller
     f.close
   end
 
+  $custom_dir = "%s/custom" % [$resource_dir_target]
+
+  def self.insert_custom(wod, msg)
+    if !["su","mo","tu","we","th","fr","sa"].include? wod
+      abort "week of day has to be 'su''mo''tu''we''th''fr''sa'.".red
+    end
+
+    if msg == "" || msg == nil
+      abort "Don't forget to enter the message. Fagit.".red
+    end
+    makeDir $custom_dir
+    # ..custom/weekindex/time.cust
+    f = File.open("#{$custom_dir}/#{wod}.cust", "a")
+    f.puts msg
+    f.close
+  end
+
+  def self.getCustoms(wod)
+    getArray("#{$custom_dir}/#{wod}.cust")
+  end
+
+  def self.getArray(file)
+    if !File.exist? file
+      return Array.new
+    end
+    f = File.open(file, "r")
+    arr = f.to_a
+    f.close
+    arr
+  end
+
   def self.get_text(year, month, day, isholiday=false)
     mdir = getMonthDir year, month
     makeDir mdir
@@ -86,8 +121,6 @@ class Controller
     has
   end
 
-  $resource_dir_root = "/usr/local/etc/calx"
-  $resource_dir_target = "#{$resource_dir_root}/caldata"
 
   def self.getMonthDir(year, month)
     "%s/%s/%s" % [$resource_dir_target, year, month]

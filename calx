@@ -17,16 +17,8 @@ def complement_year(year)
   end
 end
 
-def insert(isholiday=false)
-  #if !isholiday && ARGV.size < 4
-  #  abort "Error : [month] [day] [comment] [year]".red
-  #end
-
-  #if isholiday && ARGV.size < 3
-  #  abort "Error : [month] [day] [year]".red
-  #end
-
-  # month day {comment} year
+def insert(isholiday=false,ext="")
+ # month day {comment} year
   month = ARGV[1]
   day = ARGV[2]
 
@@ -42,9 +34,20 @@ def insert(isholiday=false)
     comment = ARGV[1]
   end
 
+  if (year == nil) || (month == nil) || (day == nil)
+    year = $d.year
+    month = $d.month
+    day = $d.day
+  end
 
-  Controller.insert(year, month, day, comment, isholiday)
-  abort "registration completed : #{year}/#{month}/#{day} #{comment}"
+  if ext == ""
+    Controller.insert(year, month, day, comment, isholiday)
+    abort "registration completed | #{year}/#{month}/#{day} #{comment}"
+  else
+    Controller.insert_custom ARGV[1], ARGV[2]
+    abort "custom registration completed | #{ARGV[1]} :  '#{ARGV[2]}'"
+  end
+
 end
 
 def delete()
@@ -65,8 +68,8 @@ end
 
 case option
 
-when "taskdel"
-    month = ARGV[1]
+when "taskdel", "deltask", "deltas"
+  month = ARGV[1]
   day = ARGV[2]
   year = $d.year.to_s
   index = ARGV[3]
@@ -84,9 +87,12 @@ when "taskdel"
   abort
 when "add"
   insert
+when "addcustom", "addcust"
+  insert false, "custom"
+  abort
 when "hol"
   insert true
-when "rm"
+when "rm", "del"
   delete
 when "-h", "help"
   puts
@@ -95,7 +101,6 @@ when "-h", "help"
   puts "calx hol [month] [day] [comment] [optional:year] ... add holiday"
   puts "calx rm [month] [day] [optional:year] ... rm todo|holiday"
   puts "calx cert [year] [month]  ... show the calendar of certain month of certain year"
-
   puts
   abort
 when "cert"
@@ -159,14 +164,37 @@ end
 
 showTempus $d
 
+
+$timesepatationkey = "time="
+
+def convertIntIntoString(int)
+  case int
+  when 0
+    return "su"
+  when 1
+    return "mo"
+  when 2
+    return "tu"
+  when 3
+    return "we"
+  when 4
+    return "th"
+  when 5
+    return "fr"
+  when 6
+    return "sa"
+  end
+end
+
 def add_right_pane(arr, int)
+  arr += Controller.getCustoms(convertIntIntoString($d.wday))
   extra = ""
   if arr.size > int
     extra = "- "+arr[int].chomp
   end
   remnant = -1
-  if extra.include? "t:"
-    time = extra.strip.split("t:")[1].split(':')
+  if extra.include? $timesepatationkey
+    time = extra.strip.split($timesepatationkey)[1].split(':')
     hour = time[0].to_i
     min = time[1].to_i
     remnant =  (hour*60+min) - ($d.hour*60+$d.minute)
