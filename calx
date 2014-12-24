@@ -18,13 +18,13 @@ def complement_year(year)
 end
 
 def insert(isholiday=false)
-  if !isholiday && ARGV.size < 4
-    abort "Error : [month] [day] [comment] [year]".red
-  end
+  #if !isholiday && ARGV.size < 4
+  #  abort "Error : [month] [day] [comment] [year]".red
+  #end
 
-  if isholiday && ARGV.size < 3
-    abort "Error : [month] [day] [year]".red
-  end
+  #if isholiday && ARGV.size < 3
+  #  abort "Error : [month] [day] [year]".red
+  #end
 
   # month day {comment} year
   month = ARGV[1]
@@ -35,6 +35,14 @@ def insert(isholiday=false)
   if ARGV.size == 5
     year = complement_year ARGV[4]
   end
+
+  if ARGV.size == 2
+    month = $d.month
+    day = $d.day
+    comment = ARGV[1]
+  end
+
+
   Controller.insert(year, month, day, comment, isholiday)
   abort "registration completed : #{year}/#{month}/#{day} #{comment}"
 end
@@ -57,8 +65,8 @@ end
 
 case option
 
-when "rmtask"
-  month = ARGV[1]
+when "taskdel"
+    month = ARGV[1]
   day = ARGV[2]
   year = $d.year.to_s
   index = ARGV[3]
@@ -67,6 +75,11 @@ when "rmtask"
     year = complement_year ARGV[4]
   end
 
+  if ARGV.size == 2
+    month = $d.month
+    day = $d.day
+    index = ARGV[1]
+  end
   Controller.delete_todo year, month, day, index.to_i
   abort
 when "add"
@@ -81,6 +94,8 @@ when "-h"
   puts "calx add [month] [day] [comment] [optional:year] ... add todo "
   puts "calx hol [month] [day] [comment] [optional:year] ... add holiday"
   puts "calx rm [month] [day] [optional:year] ... rm todo|holiday"
+  puts "calx cert [year] [month]  ... show the calendar of certain month of certain year"
+
   puts
   abort
 when "cert"
@@ -109,16 +124,27 @@ end
 haec_uno_dies = DateTime.new($haec_annus.to_i,$haec_mensis.to_i,1).wday
 
 def showTempus(d)
-  line = "------"
-  printf line
   minute = d.minute.to_s
   if minute.size == 1
    minute = "0"+minute
   end
-  time = " %s:%s " % [d.hour, minute]
+
+  time = "%s:%s " % [d.hour, minute]
   printf time.green
-  printf "---|"
+  printf "["
   percentage =  "%i" % [nanciscorRatio(d.hour, d.minute)]
+  allelem = 12.0
+  ratioA = (allelem * percentage.to_f/100.0).to_i
+  ratioB = allelem - ratioA
+  (1..ratioA).each { |x|
+   printf "|".red
+  }
+
+  (1..ratioB).each { |x|
+   printf "|"
+  }
+  printf "]"
+
   if percentage == "100"
     percentage = "FIN"
   end
@@ -126,6 +152,8 @@ def showTempus(d)
   if percentage != "FIN"
     printf "%"
   end
+
+
   puts
 end
 
