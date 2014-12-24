@@ -102,6 +102,7 @@ when "-h", "help"
   puts "calx rm [month] [day] [optional:year] ... rm todo|holiday"
   puts "calx cert [year] [month]  ... show the calendar of certain month of certain year"
   puts "calx addcust [dayofweek...su/mo/tu/we/th/fr/sa] [comment] ... add custom schedule"
+  puts "calx deltask [index] ... delete the task of today by index[1..]"
   puts
   abort
 when "cert"
