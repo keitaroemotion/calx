@@ -101,6 +101,7 @@ when "-h", "help"
   puts "calx hol [month] [day] [comment] [optional:year] ... add holiday"
   puts "calx rm [month] [day] [optional:year] ... rm todo|holiday"
   puts "calx cert [year] [month]  ... show the calendar of certain month of certain year"
+  puts "calx addcust [dayofweek...su/mo/tu/we/th/fr/sa] [comment] ... add custom schedule"
   puts
   abort
 when "cert"
