@@ -200,6 +200,7 @@ def add_right_pane(arr, int)
     hour = time[0].to_i
     min = time[1].to_i
     remnant =  (hour*60+min) - ($d.hour*60+$d.minute)
+    extra = extra.gsub! $timesepatationkey , ""
   end
   printf "| #{extra} ".white
   if remnant > 0
